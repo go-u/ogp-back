@@ -686,6 +686,7 @@ func (o OgpSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols
 
 var mySQLOgpUniqueColumns = []string{
 	"id",
+	"url",
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.

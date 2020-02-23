@@ -7,14 +7,13 @@ CREATE TABLE ogp
   bookmarks INT UNSIGNED NOT NULL, # DBの負荷軽減のため集計カラムを利用
 
   type VARCHAR(20) CHARACTER SET ascii NOT NULL, # summary/large/player
-  url VARCHAR(255) CHARACTER SET ascii NOT NULL,
+  url VARCHAR(255) CHARACTER SET ascii NOT NULL UNIQUE,
   title VARCHAR(400) CHARACTER SET utf8mb4 NOT NULL,
   description VARCHAR(1000) CHARACTER SET utf8mb4 NOT NULL,
   image VARCHAR(255) CHARACTER SET ascii NOT NULL,
 
   PRIMARY KEY (id),
-    INDEX (user_id),
-    INDEX (url)
+    INDEX (user_id)
 );
 
 # 今回は簡易化のためパーティショニングは行わない
