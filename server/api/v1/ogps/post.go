@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"github.com/go-chi/render"
 	"github.com/otiai10/opengraph"
 	"github.com/volatiletech/sqlboiler/boil"
@@ -11,12 +12,13 @@ import (
 	"server/db/models"
 	"server/initialize/db"
 	"server/tools"
+	"strings"
 	"time"
 )
 
 func Add(r *http.Request) (*models.Ogp, error) {
-	ogp := models.Ogp{}
-	err := render.DecodeJSON(r.Body, &ogp)
+	ogp_request := OgpRequest{}
+	err := render.DecodeJSON(r.Body, &ogp_request)
 	if err != nil {
 		return nil, err
 	}
@@ -28,6 +30,14 @@ func Add(r *http.Request) (*models.Ogp, error) {
 		return nil, errors.New("this user is not editor")
 	}
 
+	// 受け取った時点でFQDNであることを確認
+	_, err = isValidFQDN(ogp_request.FQDN)
+	if err != nil {
+		return nil, err
+	}
+	ogp := models.Ogp{
+		URL: fmt.Sprintf("https://%s", ogp_request.FQDN),
+	}
 	ogp.UserID = user.ID
 
 	buf := bytes.NewBuffer(nil)
@@ -70,10 +80,20 @@ func Add(r *http.Request) (*models.Ogp, error) {
 }
 
 func Preview(r *http.Request) (*models.Ogp, error) {
-	ogp := models.Ogp{}
-	err := render.DecodeJSON(r.Body, &ogp)
+	ogp_request := OgpRequest{}
+	err := render.DecodeJSON(r.Body, &ogp_request)
 	if err != nil {
 		return nil, err
+	}
+
+	// 受け取った時点でFQDNであることを確認
+	_, err = isValidFQDN(ogp_request.FQDN)
+	if err != nil {
+		return nil, err
+	}
+
+	ogp := models.Ogp{
+		URL: fmt.Sprintf("https://%s", ogp_request.FQDN),
 	}
 
 	buf := bytes.NewBuffer(nil)
@@ -108,4 +128,14 @@ func Preview(r *http.Request) (*models.Ogp, error) {
 	}
 
 	return &new_ogp, err
+}
+
+func isValidFQDN(s string) (bool, error) {
+	if strings.HasPrefix(s, "http") {
+		return false, errors.New("no prefix allowed")
+	}
+	if strings.HasPrefix(s, "/") {
+		return false, errors.New("no suffix allowed")
+	}
+	return true, nil
 }
