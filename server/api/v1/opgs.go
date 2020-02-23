@@ -35,5 +35,14 @@ func OgpRouter() http.Handler {
 			render.Respond(w, r, result)
 		}
 	})
+	// delete // 利便性のためPostメソッドを利用
+	r.Post("/delete", func(w http.ResponseWriter, r *http.Request) {
+		err := ogps.Delete(r)
+		if err != nil {
+			render.Render(w, r, ErrRender(err))
+		} else {
+			render.Respond(w, r, "ok")
+		}
+	})
 	return r
 }
