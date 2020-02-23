@@ -1,0 +1,33 @@
+name: Production
+on:
+  release:
+    types: [published]
+#  安定してきたらマージと同時にプロダクションへのリリースも検討
+#  push:
+#    branches:
+#      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Decrypt Secrets
+        run: ./server/secrets/decrypt.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GAE_DEPLOY_EMAIL_PRD }}
+          service_account_key: ${{ secrets.GAE_DEPLOY_KEY_PRD }}
+      - run: gcloud info
+
+      - name: GAE deploy
+        run: |
+          cd ./server && gcloud app deploy api.yaml --project $PROJECT_ID --quiet
+        env:
+          PROJECT_ID: ogp-prd
