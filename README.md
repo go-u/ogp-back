@@ -2,7 +2,18 @@
 ![](https://github.com/go-u/ogp-back/workflows/Staging/badge.svg)
 ![](https://github.com/go-u/ogp-back/workflows/Production/badge.svg)  
 
-# OGP Gal (バックエンド部分)
+
+<p align="center"><img src="./docs/logo.png" alt="OGP Gallery logo"></p>
+<h1 align="center">OGP Gallery</h1>
+
+
+## バックエンド部分概要
+このリポジトリには以下が含まれます
+- APIに利用しているGolangのコード(GCPのSDK含む)
+- DB用のSQLファイル
+- Docker Compose用の設定ファイル
+- テストコード(Golangのユニットテスト)
+- CI/CDのコード
 
 ## APIについて
 Golang標準のnet/httpパッケージと100%互換のルーターである[Chi](https://github.com/go-chi/chi)を利用して作成しています。  
