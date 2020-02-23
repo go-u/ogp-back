@@ -1,13 +1,13 @@
-![](https://github.com/go-u/ogp-gal-back/workflows/Test/badge.svg)
-![](https://github.com/go-u/ogp-gal-back/workflows/Staging/badge.svg)
-![](https://github.com/go-u/ogp-gal-back/workflows/Production/badge.svg)  
+![](https://github.com/go-u/ogp-back/workflows/Test/badge.svg)
+![](https://github.com/go-u/ogp-back/workflows/Staging/badge.svg)
+![](https://github.com/go-u/ogp-back/workflows/Production/badge.svg)  
 
 # OGP Gal (バックエンド部分)
 
 ## APIについて
 Golang標準のnet/httpパッケージと100%互換のルーターである[Chi](https://github.com/go-chi/chi)を利用して作成しています。  
 - [API部分のコード](https://github.com/go-u/ogp-back/tree/master/server)  
-- [自作のChiミドルウェア(CloudFlare経由のIPを取得, net/http準拠)](https://github.com/go-u/ogp-gal-back/blob/master/server/middleware_custom/get_cloudflare_ip.go)
+- [自作のChiミドルウェア(CloudFlare経由のIPを取得, net/http準拠)](https://github.com/go-u/ogp-back/blob/master/server/middleware_custom/get_cloudflare_ip.go)
 
 ## システム構成について
 Google系のクラウドサービスを利用しています(GCP / GAE / GCS / CloudSql / Firebase等)
