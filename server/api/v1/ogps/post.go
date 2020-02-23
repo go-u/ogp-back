@@ -96,6 +96,14 @@ func Preview(r *http.Request) (*models.Ogp, error) {
 		URL: fmt.Sprintf("https://%s", ogp_request.FQDN),
 	}
 
+	isExist, err := models.Ogps(models.OgpWhere.URL.EQ(ogp.URL)).Exists(context.Background(), db.Connection)
+	if err != nil {
+		return nil, err
+	}
+	if isExist {
+		return nil, errors.New("ogp exist")
+	}
+
 	buf := bytes.NewBuffer(nil)
 	req, err := http.NewRequest("GET", ogp.URL, buf)
 	if err != nil {
