@@ -48,7 +48,7 @@ DBのマイグレーションにはsql-migrateを利用しています。
 プロトタイプ段階の現在は以下のようなGithub Actionsを用いています。
 - [プッシュ時にユニットテスト](https://github.com/go-u/ogp-back/blob/master/.github/workflows/test.yml)
 - [プルリク時に検証用のGAE環境に自動デプロイ](https://github.com/go-u/ogp-back/blob/master/.github/workflows/deploy_staging.yml)
-- [リリース時にプロダクション用のGAEに自動デプロイ](https://github.com/go-u/ogp-back/blob/master/.github/workflows/deploy_production.yml)  
+- [マージ時にプロダクション環境のGAEに自動デプロイ](https://github.com/go-u/ogp-back/blob/master/.github/workflows/deploy_production.yml)  
 
 ## その他
 - ローカル開発環境ではDocker/Docker Composeを利用しています
