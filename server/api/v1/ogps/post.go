@@ -74,6 +74,12 @@ func Add(r *http.Request) (*models.Ogp, error) {
 		Image:       ogp_info.Image[0].URL,
 	}
 
+	// confirm ogp image url
+	_, err = isValidOgpImageUrl(new_ogp.Image)
+	if err != nil {
+		return nil, err
+	}
+
 	err = new_ogp.Insert(context.Background(), db.Connection, boil.Blacklist())
 	return &new_ogp, err
 
@@ -135,6 +141,11 @@ func Preview(r *http.Request) (*models.Ogp, error) {
 		Image:       ogp_info.Image[0].URL,
 	}
 
+	_, err = isValidOgpImageUrl(new_ogp.Image)
+	if err != nil {
+		return nil, err
+	}
+
 	return &new_ogp, err
 }
 
@@ -144,6 +155,13 @@ func isValidFQDN(s string) (bool, error) {
 	}
 	if strings.HasPrefix(s, "/") {
 		return false, errors.New("no suffix allowed")
+	}
+	return true, nil
+}
+
+func isValidOgpImageUrl(s string) (bool, error) {
+	if !strings.HasPrefix(s, "https") {
+		return false, errors.New("image url is not https ")
 	}
 	return true, nil
 }
