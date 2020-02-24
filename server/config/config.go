@@ -11,7 +11,7 @@ const (
 // regex
 const (
 	userNameRegex    = `^[a-z0-9_]{2,10}$`
-	displayNameRegex = `^\S{1,15}$` // 空白文字を含まない
+	displayNameRegex = `^.{1,50}$`
 )
 
 // 初期化コストはなくすため、グローバル保持

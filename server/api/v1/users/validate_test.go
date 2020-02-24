@@ -32,13 +32,13 @@ func TestIsValidDisplayName(t *testing.T) {
 		valid bool
 	}{
 		{name: "", valid: false},
-		{name: " ", valid: false},
-		{name: "first last", valid: false},
+		{name: "first last", valid: true},
 		{name: "first_last", valid: true},
 		{name: "氏名", valid: true}, // 全角文字を許容
 		{name: "⭐", valid: true},  // 絵文字を許容
-		{name: "123456789012345", valid: true},
-		{name: "1234567890123456", valid: false}, // 文字数の境界値
+		{name: "テスト・ザ・ユーザー🇪←🇸🇬←🇯🇵", valid: true}, // 国旗の絵文字などを含む
+		{name: "12345678901234567890123456789012345678901234567890", valid: true},
+		{name: "123456789012345678901234567890123456789012345678901", valid: false}, // 文字数の境界値
 	}
 
 	for _, c := range cases {
