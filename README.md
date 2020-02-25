@@ -3,7 +3,7 @@
 ![](https://github.com/go-u/ogp-back/workflows/Production/badge.svg)  
 
 
-<p align="center"><img src="./docs/logo.png" alt="OGP Gallery logo"></p>
+<p align="center"><img src="./docs/systems.png" alt="Systems"></p>
 <h1 align="center">OGP Gallery</h1>
 
 
