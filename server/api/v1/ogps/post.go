@@ -61,6 +61,7 @@ func Add(r *http.Request) (*models.Ogp, error) {
 		//log.Fatalln(1003, err)
 		return nil, err
 	}
+	ogp_info.ToAbsURL()
 
 	now := time.Now()
 	new_ogp := models.Ogp{
@@ -128,6 +129,7 @@ func Preview(r *http.Request) (*models.Ogp, error) {
 	if err := ogp_info.Parse(res.Body); err != nil {
 		return nil, err
 	}
+	ogp_info.ToAbsURL()
 
 	if len(ogp_info.Image) == 0 {
 		return nil, errors.New("no image")
