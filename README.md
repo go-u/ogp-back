@@ -26,22 +26,24 @@ Google系のクラウドサービスを利用しています(GCP / GAE / GCS / C
 - ユーザのプロフィール画像の保存にはCloud Storage を利用
 - データベースはCloud SQLのMysqlを利用
 - ユーザ登録やJWT認証にFirebase SDKを利用
-- プッシュ通信の送信もFirebase SDKを利用
+- プッシュ通信の送信もFirebase SDKを利用  
+  (一斉送信は対応済み/ユーザ個別の送信機能は開発中)
 
 ## DBについて
 DBはMySQLを使用しています。  
-ORMは高速な[SQLBiler](https://github.com/volatiletech/sqlboiler)を利用しています。  
-また高速化やDB負荷を意識して[部分的にORMを使わずにクエリ](https://github.com/go-u/ogp-back/blob/master/server/tools/get_users_from_ids.go)を書いています。  
+ORMは[SQLBoiler](https://github.com/volatiletech/sqlboiler)を利用しています。  
+高速化やDB負荷を意識してORMを使わずに直接クエリを書くこともできます。  
 DBのマイグレーションにはsql-migrateを利用しています。 
 
-別途PythonやDjangoでPostgreSQL/MongoDB/Redisの経験が有ります。  
+別途PythonからPostgreSQL/MongoDB/Redisを利用した経験が有ります。  
 
 ## セキュリティについて
 - APIへのダイレクトアクセスはファイアーウォールで制限しています  
-- APIはTorネットワークからのアクセスを禁止していたずらや迷惑なアクセスを防いでいます
+- APIはTorネットワークからのアクセスを禁止していたずらを防いでいます
 
 ## テストについて
-先日リリースしたばかりのためテストは作成中です。参考程度ですが以下のようにテーブルテストを意識しています。
+先日リリースしたばかりのためテストは作成中です。  
+参考程度ですが以下のようにテーブルテストを意識しています。
 - [ユーザ名の検証用関数のテーブルテスト](https://github.com/go-u/ogp-back/blob/master/server/api/v1/users/validate_test.go)  
 
 ## CI/CDについて
