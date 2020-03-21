@@ -3,19 +3,19 @@ settings:
     force: false
     interval: 0s
 schema:
-- name: server
-  path: .
-  commands:
-    run:
-      status: true
-  watcher:
-    extensions:
-    - go
-    paths:
-    - /
-    ignore:
+  - name: server
+    path: .
+    commands:
+      run:
+        status: true
+    watcher:
+      extensions:
+        - go
       paths:
-      - .git
-      - .realize
-      - .dist/spa
-      - vendor
+        - /
+      ignore:
+        paths:
+          - .git
+          - .realize
+          - .dist/spa
+          - vendor

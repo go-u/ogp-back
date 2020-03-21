@@ -1,5 +1,5 @@
-on: [push]
 name: Test
+on: [push]
 
 jobs:
   test:
@@ -10,18 +10,29 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: DB Up
+        run: cd docker/test/ && sudo apt-get install mysql-client -y && docker-compose up -d
+
       - name: Install Go
         uses: actions/setup-go@v1
         with:
           go-version: ${{ matrix.go-version }}
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Decrypt Secrets
-        run: ./server/secrets/decrypt.sh
+        run: ./server/etc/secrets/decrypt.sh
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
       - name: Test
         run: cd server/ && go test server...
+
+#      - name: Test with Codecov
+#        run: cd server/ && go test server... --coverprofile=coverage.txt -covermode=atomic
+#      - uses: codecov/codecov-action@v1
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          flags: unittests
+#          name: codecov-umbrella

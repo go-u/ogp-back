@@ -8,46 +8,36 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"server/api/v1"
-	"server/initialize"
-	"server/initialize/db"
-	"server/initialize/firebaseauth"
-	"server/initialize/gcs"
-	"server/middleware_custom"
+	"server/interfaces/api"
+	middlewareCustom "server/interfaces/api/middleware"
 )
 
 func init() {
-	PROJECT_ID := initialize.GetProjectId()
-	// db
-	db.InitializeDB(PROJECT_ID)
-	// GCS
-	gcs.InitializeGcs(PROJECT_ID)
-	// firebase
-	firebaseauth.InitializeFirebaseAuth(PROJECT_ID)
+	boil.DebugMode = false
 }
 
 func main() {
+	// router
 	r := chi.NewRouter()
-	boil.DebugMode = false
-	cors := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{"Accept", "Content-Type", "JWT"},
-		MaxAge:         3600, // Maximum value not ignored by any of major browsers
-	})
-	r.Use(cors.Handler)
+	r.Use(cors.New(getCorsOptions()).Handler)
 	r.Use(middleware.Logger)
-	r.Use(middleware_custom.LimitSizeByContentLengthHeader)
-	r.Use(middleware_custom.GetCloudFlareIp)
+	r.Use(middlewareCustom.LimitSizeByContentLengthHeader)
+	r.Use(middlewareCustom.GetCloudFlareIp)
 	r.Use(middleware.Recoverer)
-	r.Mount("/api/v1", v1.ApiRouter())
 
+	// Dependency Injection
+	handlerConfig := getApiConfig()
+	apiHandler := api.NewHandler(&handlerConfig)
+	r.Mount("/api", apiHandler)
+
+	// start server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8081"
 	}
 	log.Printf("Listening on port %s", port)
-
-	http.ListenAndServe(":"+port, r)
-	defer db.Connection.Close()
+	err := http.ListenAndServe(":"+port, r)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
