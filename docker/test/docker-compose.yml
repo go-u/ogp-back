@@ -1,0 +1,15 @@
+version: "3.1"
+services:
+  mysql_test:
+    image: mysql:5.7
+    restart: always
+    container_name: ${APP_TEST_NAME}
+    command: [
+      '--wait_timeout=3600',
+      '--explicit_defaults_for_timestamp',
+    ]
+    environment:
+      MYSQL_TCP_PORT: 5556
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: ${APP_TEST_NAME}
+    network_mode: host # port 5556

@@ -1,0 +1,12 @@
+syntax = "proto3";
+package server;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;pb";
+
+message Bookmark {
+    uint64 user_id = 1;
+    string fqdn = 2;
+    google.protobuf.Timestamp created_at = 3;
+}

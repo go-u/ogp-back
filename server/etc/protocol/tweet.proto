@@ -1,0 +1,13 @@
+syntax = "proto3";
+package server;
+
+option go_package = ".;pb";
+
+message Tweet {
+    string url = 1;
+    string html = 2;
+}
+
+message Tweets {
+    repeated Tweet stats = 1;
+}
