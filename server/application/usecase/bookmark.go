@@ -29,6 +29,9 @@ func (u *bookmarkUsecase) Get(ctx context.Context, userID uint64) ([]*pb.Bookmar
 	if err != nil {
 		return nil, err
 	}
+	if bookmarkEntities == nil {
+		return make([]*pb.Bookmark, 0), nil
+	}
 	bookmarks, err := convToBookmarksProto(bookmarkEntities)
 	return bookmarks, err
 }
