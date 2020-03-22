@@ -8,6 +8,8 @@
 ## ハイライト
 ### :star2: DDD/クリーンアーキテクチャに準じた実装  
 
+### :zap: Protocol BuffersによるAPI定義&構造体の生成  
+
 ### :unlock: JWT(Json Web Token)を利用したモダンな認証方式で実装  
 
 ### :heart: APIにアクセス制限を導入しセキュリティを向上    
