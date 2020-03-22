@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"github.com/volatiletech/sqlboiler/boil"
+	"github.com/volatiletech/sqlboiler/queries/qm"
 	domain "server/domain/model"
 	"server/domain/repository"
 	"server/infrastructure/store/mysql/models"
@@ -18,14 +19,18 @@ type BookmarkStore struct {
 	SqlHandler
 }
 
-func (s *BookmarkStore) Get(ctx context.Context, userID uint64) ([]*domain.Bookmark, error) {
+func (s *BookmarkStore) Get(ctx context.Context, userID uint64) ([]*domain.Stat, error) {
 	bookmarks, err := models.Bookmarks(models.BookmarkWhere.UserID.EQ(userID)).All(ctx, s.SqlHandler.Conn)
-	var bookmarkEntities []*domain.Bookmark
+	var statEntities []*domain.Stat
 	for _, bookmark := range bookmarks {
-		bookmarkEntity := ConvToBookmarkEntity(bookmark)
-		bookmarkEntities = append(bookmarkEntities, bookmarkEntity)
+		stat, err := models.Stats(models.StatWhere.FQDN.EQ(bookmark.FQDN), qm.OrderBy("-"+models.StatColumns.Date)).One(context.Background(), s.SqlHandler.Conn)
+		if err != nil {
+			return make([]*domain.Stat, 0), err
+		}
+		statEntity := convToStatEntity(stat)
+		statEntities = append(statEntities, statEntity)
 	}
-	return bookmarkEntities, err
+	return statEntities, err
 }
 
 func (s *BookmarkStore) Create(ctx context.Context, userID uint64, fqdn string) error {

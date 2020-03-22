@@ -176,8 +176,8 @@ func TestHandler_handleGetBookmarks(t *testing.T) {
 						},
 					},
 					BookmarkUsecase: &mock.BookmarkUsecase{
-						OnGet: func(context.Context, uint64) ([]*pb.Bookmark, error) {
-							return testdata_test.PbBookmarks, nil
+						OnGet: func(context.Context, uint64) ([]*pb.Stat, error) {
+							return testdata_test.PbStats, nil
 						},
 					},
 					UserUsecase: &mock.UserUsecase{
@@ -189,7 +189,7 @@ func TestHandler_handleGetBookmarks(t *testing.T) {
 			},
 			args{r: testdata_test.BookmarkGetRequest()},
 			200,
-			`[{"user_id":1,"fqdn":"example.com","created_at":{"seconds":1602324610,"nanos":10}}]`,
+			`[{"fqdn":"example.com","count":30,"title":"title","description":"description","image":"https://example.com/image01.png","lang":"ja"}]`,
 		},
 	}
 	for _, tt := range tests {

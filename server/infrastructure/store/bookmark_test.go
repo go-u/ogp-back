@@ -2,10 +2,13 @@ package store
 
 import (
 	"context"
+	"github.com/volatiletech/sqlboiler/boil"
+	"log"
 	"reflect"
 	testdata_test "server/application/usecase/testdata"
 	domain "server/domain/model"
 	"server/domain/repository"
+	"server/infrastructure/store/mysql/models"
 	"testing"
 )
 
@@ -83,7 +86,7 @@ func TestBookmarkStore_Get(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []*domain.Bookmark
+		want    []*domain.Stat
 		wantErr bool
 	}{
 		{
@@ -93,9 +96,28 @@ func TestBookmarkStore_Get(t *testing.T) {
 				ctx:    context.Background(),
 				userID: testdata_test.User1.ID,
 			},
-			testdata_test.Bookmarks,
+			testdata_test.Stats,
 			false,
 		},
+	}
+
+	// insert
+	newStat := models.Stat{
+		Date:        testdata_test.Stat1.Date,
+		FQDN:        testdata_test.Stat1.FQDN,
+		Host:        testdata_test.Stat1.Host,
+		Count:       testdata_test.Stat1.Count,
+		Title:       testdata_test.Stat1.Title,
+		Description: testdata_test.Stat1.Description,
+		Image:       testdata_test.Stat1.Image,
+		Type:        testdata_test.Stat1.Type,
+		Lang:        testdata_test.Stat1.Lang,
+	}
+
+	sqlHandler := NewSqlHandler("ogp-test")
+	err := newStat.Insert(context.Background(), sqlHandler.Conn, boil.Blacklist())
+	if err != nil {
+		log.Fatal(err)
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -111,6 +133,16 @@ func TestBookmarkStore_Get(t *testing.T) {
 				t.Errorf("Get() got = %v, want %v", got, tt.want)
 			}
 		})
+	}
+
+	// tear down
+	deleteStat, err := models.Stats(models.StatWhere.FQDN.EQ(newStat.FQDN)).One(context.Background(), sqlHandler.Conn)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	_, err = deleteStat.Delete(context.Background(), sqlHandler.Conn)
+	if err != nil {
+		log.Fatalln(err)
 	}
 }
 

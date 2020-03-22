@@ -6,12 +6,12 @@ import (
 )
 
 type BookmarkStore struct {
-	OnGet    func(context.Context, uint64) ([]*domain.Bookmark, error)
+	OnGet    func(context.Context, uint64) ([]*domain.Stat, error)
 	OnCreate func(context.Context, uint64, string) error
 	OnDelete func(context.Context, uint64, string) error
 }
 
-func (s *BookmarkStore) Get(ctx context.Context, userID uint64) ([]*domain.Bookmark, error) {
+func (s *BookmarkStore) Get(ctx context.Context, userID uint64) ([]*domain.Stat, error) {
 	return s.OnGet(ctx, userID)
 }
 

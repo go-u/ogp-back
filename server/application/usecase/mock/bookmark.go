@@ -6,12 +6,12 @@ import (
 )
 
 type BookmarkUsecase struct {
-	OnGet    func(context.Context, uint64) ([]*pb.Bookmark, error)
+	OnGet    func(context.Context, uint64) ([]*pb.Stat, error)
 	OnAdd    func(context.Context, uint64, string) error
 	OnDelete func(context.Context, uint64, string) error
 }
 
-func (u *BookmarkUsecase) Get(ctx context.Context, userID uint64) ([]*pb.Bookmark, error) {
+func (u *BookmarkUsecase) Get(ctx context.Context, userID uint64) ([]*pb.Stat, error) {
 	return u.OnGet(ctx, userID)
 }
 
