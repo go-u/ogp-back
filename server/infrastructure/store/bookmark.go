@@ -22,8 +22,10 @@ type BookmarkStore struct {
 func (s *BookmarkStore) Get(ctx context.Context, userID uint64) ([]*domain.Stat, error) {
 	bookmarks, err := models.Bookmarks(models.BookmarkWhere.UserID.EQ(userID)).All(ctx, s.SqlHandler.Conn)
 	var statEntities []*domain.Stat
+
+	// todo: 以下のForで回す処理は N+1 で遅くなるため生SQLクエリ一発で取得するように変更(現状は件数が少ないので問題ない)
 	for _, bookmark := range bookmarks {
-		stat, err := models.Stats(models.StatWhere.FQDN.EQ(bookmark.FQDN), qm.OrderBy("-"+models.StatColumns.Date)).One(context.Background(), s.SqlHandler.Conn)
+		stat, err := models.Stats(models.StatWhere.FQDN.EQ(bookmark.FQDN), qm.OrderBy("-"+models.StatColumns.Date), qm.Limit(1)).One(context.Background(), s.SqlHandler.Conn)
 		if err != nil {
 			return make([]*domain.Stat, 0), err
 		}
