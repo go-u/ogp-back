@@ -130,25 +130,25 @@ func Test_bookmarkUsecase_Get(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    []*pb.Bookmark
+		want    []*pb.Stat
 		wantErr bool
 	}{
 		{"bookmark exist",
 			fields{Repo: &mock.BookmarkStore{
-				OnGet: func(ctx context.Context, userID uint64) ([]*model.Bookmark, error) {
-					return testdata_test.Bookmarks, nil
+				OnGet: func(ctx context.Context, userID uint64) ([]*model.Stat, error) {
+					return testdata_test.Stats, nil
 				},
 			}},
 			args{
 				ctx:    context.Background(),
 				userID: testdata_test.PbUser1.Id,
 			},
-			testdata_test.PbBookmarks,
+			testdata_test.PbStats,
 			false,
 		},
 		{"bookmark not exist",
 			fields{Repo: &mock.BookmarkStore{
-				OnGet: func(ctx context.Context, userID uint64) ([]*model.Bookmark, error) {
+				OnGet: func(ctx context.Context, userID uint64) ([]*model.Stat, error) {
 					return nil, sql.ErrNoRows
 				},
 			}},
@@ -172,30 +172,6 @@ func Test_bookmarkUsecase_Get(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Get() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_convToBookmarksProto(t *testing.T) {
-	type args struct {
-		bookmarkEntities []*model.Bookmark
-	}
-	tests := []struct {
-		name string
-		args args
-		want []*pb.Bookmark
-	}{
-		{
-			"success",
-			args{testdata_test.Bookmarks},
-			testdata_test.PbBookmarks,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got, _ := convToBookmarksProto(tt.args.bookmarkEntities); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("convToBookmarksProto() = %v, want %v", got, tt.want)
 			}
 		})
 	}
