@@ -8,6 +8,8 @@ services:
       '--wait_timeout=3600',
       '--explicit_defaults_for_timestamp',
     ]
+    volumes:
+      - /home/user/DB/${APP_NAME}/mysql:/var/lib/mysql
     environment:
       MYSQL_TCP_PORT: 5555
       MYSQL_ROOT_PASSWORD: pass
